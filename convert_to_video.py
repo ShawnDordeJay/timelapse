@@ -6,9 +6,10 @@ from shutil import copyfile
 import shutil
 import sys
 
-WAIT_TIME = 3600
+WAIT_TIME = 3600 #3600 seconds = 1 hour
 path = '/home/pi/pictures'
 
+#start every full hour
 sleep(60*(60-DateTime.now().minute))
 
 while 1 :
@@ -18,7 +19,8 @@ while 1 :
 
 	now = DateTime.now()
 	now_string = DateTime.now().strftime('%d_%m_%Y_%H_%M')
-	#create new folder and move pictures to new folder
+
+	#create new folder
 	newfolder = path+'/'+now_string
 	try:
 		os.mkdir(newfolder)
@@ -26,23 +28,31 @@ while 1 :
                 print("Creation of the directory %s failed" % newfolder)
         else:
                 print("Successfully created the directory %s " % newfolder)
+
+	#move files to new folder
+        sys.stdout.write('start converting\n')
+        sys.stdout.flush()
 	for f in files:
                 shutil.move(f, newfolder)
 
+	#converting to .mp4
 	sys.stdout.write('start converting\n')
         sys.stdout.flush()
 
 	os.system('ffmpeg -y -r 24 -pattern_type glob -i \'' + newfolder + '/img*.jpg\' -s hd1080 -vcodec libx264 timelapse.mp4')
 
+	#rename mp4
 	sys.stdout.write('rename\n')
         sys.stdout.flush()
 
 	os.rename('timelapse.mp4', now_string+'.mp4')
 
+	#move file to created folder
         sys.stdout.write('move file\n')
         sys.stdout.flush()
 	shutil.move(now_string+'.mp4', newfolder)
 
+	#remove pictures from folder
         sys.stdout.write('remove files\n')
         sys.stdout.flush()
 
@@ -50,8 +60,6 @@ while 1 :
 	for f in files :
 		os.remove(f)
 
-	#now = DateTime.now()
-        #hour = now.strftime('%H')
 
 	sys.stdout.write('sleeping\n')
 	sys.stdout.flush()
