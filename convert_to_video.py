@@ -4,29 +4,53 @@ import glob
 import os
 from shutil import copyfile
 import shutil
+import sys
 
-WAIT_TIME = 5
+WAIT_TIME = 300
 path = '/home/pi/pictures'
-now = DateTime.now()
-minute = now.strftime('%M')
 
 while 1 :
-	newfolder = path+'/'+minute
-
-	if os.path.isdir(newfolder) :
-
-		os.system('ffmpeg -r 24 -pattern_type glob -i \'' + newfolder + '/img*.jpg\' -s hd1080 -vcodec libx264 timelapse.mp4')
-		os.rename('timelapse.mp4', minute+'.mp4')
-		shutil.move(minute+'.mp4', newfolder)
-
-		files = glob.glob(newfolder+'/*.jpg')
-                print('remove files')
-		for file in files :
-			os.remove(file)
-
+	#get all pictures form path and sort them
+	files = glob.glob(path+'/img*.jpg')
+	files.sort(key=os.path.getmtime)
 
 	now = DateTime.now()
-	minute = now.strftime('%M')
-	print('sleeeeeeep')
+	now_string = DateTime.now().strftime('%d_%m_%Y_%H_%M')
+	#create new folder and move pictures to new folder
+	newfolder = path+'/'+now_string
+	try:
+		os.mkdir(newfolder)
+	except OSError:
+                print("Creation of the directory %s failed" % newfolder)
+        else:
+                print("Successfully created the directory %s " % newfolder)
+	for f in files:
+                shutil.move(f, newfolder)
+
+	sys.stdout.write('start converting\n')
+        sys.stdout.flush()
+
+	os.system('ffmpeg -y -r 24 -pattern_type glob -i \'' + newfolder + '/img*.jpg\' -s hd1080 -vcodec libx264 timelapse.mp4')
+
+	sys.stdout.write('rename\n')
+        sys.stdout.flush()
+
+	os.rename('timelapse.mp4', now_string+'.mp4')
+
+        sys.stdout.write('move file\n')
+        sys.stdout.flush()
+	shutil.move(now_string+'.mp4', newfolder)
+
+        sys.stdout.write('remove files\n')
+        sys.stdout.flush()
+
+	files = glob.glob(newfolder+'/img*.jpg')
+	for f in files :
+		os.remove(f)
+
+	#now = DateTime.now()
+        #hour = now.strftime('%H')
+
+	sys.stdout.write('sleeping')
 	sleep(WAIT_TIME)
 

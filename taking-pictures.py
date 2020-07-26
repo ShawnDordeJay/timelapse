@@ -7,22 +7,27 @@ import picamera
 import glob
 import os
 import shutil
+import sys
 
-WAIT_TIME = 5
+WAIT_TIME = 8
 #today = Date.today()
 now = DateTime.now()
-minute = now.strftime('%M')
+hour = now.strftime('%H')
 path = '/home/pi/pictures'
 
 with picamera.PiCamera() as camera:
 	camera.resolution = (1280,720)
+	camera.annotate_text = DateTime.now().strftime('%d-%m-%Y %H:%M')
 	#taking pictures
 	for filename in camera.capture_continuous(path+'/img{timestamp:%H-%M-%S-%f}.jpg'):
+		sys.stdout.write('took picture\n')
+		sys.stdout.flush()
 		sleep(WAIT_TIME)
 
 		#if new day, generate video
 		#if today < Date.today():
-		if now.minute < DateTime.now().minute :
+		"""
+		if now.hour < DateTime.now().hour :
 			#get files and sort by creation date
 			files = glob.glob(path+'/*.jpg')
 			files.sort(key=os.path.getmtime)
@@ -33,20 +38,26 @@ with picamera.PiCamera() as camera:
 			#for file in files:
 			#	os.remove(file)
 			#set new today
-			newfolder = path+'/'+minute
+
+			sys.stdout.write('trying create new folder\n')
+                	sys.stdout.flush()
+			newfolder = path+'/'+hour
 			try:
                                 os.mkdir(newfolder)
                         except OSError:
                                 print("Creation of the directory %s failed" % newfolder)
                         else:
-                                print ("Successfully created the directory %s " % newfolder)
+                                print("Successfully created the directory %s " % newfolder)
+                        sys.stdout.write('move files to folder\n')
+                        sys.stdout.flush()
 
 			for f in files:
 				shutil.move(f, newfolder)
 
 			now = DateTime.now()
-			minute = now.strftime('%M')
-
-
+			hour = now.strftime('%H')
+                        sys.stdout.write('new hour = ' + hour+'\n')
+                        sys.stdout.flush()
+		"""
 
 
