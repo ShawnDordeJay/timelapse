@@ -6,8 +6,10 @@ from shutil import copyfile
 import shutil
 import sys
 
-WAIT_TIME = 300
+WAIT_TIME = 3600
 path = '/home/pi/pictures'
+
+sleep(60*(60-DateTime.now().minute))
 
 while 1 :
 	#get all pictures form path and sort them
@@ -51,6 +53,7 @@ while 1 :
 	#now = DateTime.now()
         #hour = now.strftime('%H')
 
-	sys.stdout.write('sleeping')
+	sys.stdout.write('sleeping\n')
+	sys.stdout.flush()
 	sleep(WAIT_TIME)
 

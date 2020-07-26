@@ -23,7 +23,7 @@ with picamera.PiCamera() as camera:
 		sys.stdout.write('took picture\n')
 		sys.stdout.flush()
 		sleep(WAIT_TIME)
-
+		camera.annotate_text = DateTime.now().strftime('%d-%m-%Y %H:%M')
 		#if new day, generate video
 		#if today < Date.today():
 		"""
