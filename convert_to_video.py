@@ -6,11 +6,12 @@ from shutil import copyfile
 import shutil
 import sys
 
-WAIT_TIME = 3600 #3600 seconds = 1 hour
+#WAIT_TIME = 3600
 path = '/home/pi/pictures'
 
-#start every full hour
-sleep(60*(60-DateTime.now().minute))
+#start every day
+secondslefttillmidnight = (3600*(24-DateTime.now().hour-1))+(60*(60-DateTime.now().minute-1))+(60-DateTime.now().seconds)
+sleep(secondslefttillmidnight)
 
 while 1 :
 	#get all pictures form path and sort them
@@ -63,5 +64,6 @@ while 1 :
 
 	sys.stdout.write('sleeping\n')
 	sys.stdout.flush()
-	sleep(WAIT_TIME)
+	secondslefttillmidnight = (3600*(24-DateTime.now().hour-1))+(60*(60-DateTime.now().minute-1))+(60-DateTime.now().seconds)
+	sleep(secondslefttillmidnight)
 
