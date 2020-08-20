@@ -9,10 +9,10 @@ WAIT_TIME = 8
 path = '/home/pi/pictures'
 
 with picamera.PiCamera() as camera:
-	camera.resolution = (1280,720)
+	camera.resolution = (1920,1080)
 	camera.annotate_text = DateTime.now().strftime('%d-%m-%Y %H:%M')
 	#taking pictures
-	for filename in camera.capture_continuous(path+'/img{timestamp:%H-%M-%S-%f}.jpg'):
+	for filename in camera.capture_continuous(path+'/img{timestamp:%d-%m-%y--%H-%M-%S-%f}.jpg'):
 		sys.stdout.write('took picture\n')
 		sys.stdout.flush()
 		sleep(WAIT_TIME)

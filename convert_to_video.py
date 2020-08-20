@@ -10,7 +10,7 @@ import sys
 path = '/home/pi/pictures'
 
 #start every day
-secondslefttillmidnight = (3600*(24-DateTime.now().hour-1))+(60*(60-DateTime.now().minute-1))+(60-DateTime.now().seconds)
+secondslefttillmidnight = (3600*(24-DateTime.now().hour-1))+(60*(60-DateTime.now().minute-1))+(60-DateTime.now().second)
 sleep(secondslefttillmidnight)
 
 while 1 :
@@ -64,6 +64,6 @@ while 1 :
 
 	sys.stdout.write('sleeping\n')
 	sys.stdout.flush()
-	secondslefttillmidnight = (3600*(24-DateTime.now().hour-1))+(60*(60-DateTime.now().minute-1))+(60-DateTime.now().seconds)
+	secondslefttillmidnight = (3600*(24-DateTime.now().hour-1))+(60*(60-DateTime.now().minute-1))+(60-DateTime.now().second)
 	sleep(secondslefttillmidnight)
 
